@@ -296,8 +296,9 @@
           <span class="app-name">Play Store</span>
           <button class="app-action">disconnect</button>
         </div>
+        <div id="githubChip"></div>
       </div>
-      <button class="connect-app-btn" onclick="mockConnect()">+ Connect an app</button>
+      <button class="connect-app-btn" onclick="connectGitHub()">+ Connect an app</button>
 
       <div class="side-section-label" style="margin-top:18px;">History</div>
       <div id="historyList">
@@ -323,7 +324,7 @@
 
     <div id="composer">
       <div class="composer-inner">
-        <button class="plus-btn" onclick="mockConnect()" title="Connect / attach">+</button>
+        <button class="plus-btn" onclick="connectGitHub()" title="Connect / attach">+</button>
         <textarea id="chatInput" rows="1" placeholder="Message Friday..." onkeydown="handleKey(event)"></textarea>
         <button class="send-btn" onclick="sendMessage()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
@@ -367,6 +368,45 @@
 
   function mockConnect(){
     alert("Yahan app-connect flow aayega (OAuth login) — abhi ke liye placeholder hai.");
+  }
+
+  function connectGitHub(){
+    window.location.href = '/api/auth/login';
+  }
+
+  async function disconnectGitHub(){
+    await fetch('/api/auth/logout', { method: 'POST' });
+    checkConnections();
+  }
+
+  async function checkConnections(){
+    try {
+      const res = await fetch('/api/me');
+      const data = await res.json();
+      const chip = document.getElementById('githubChip');
+      if (data.github) {
+        chip.innerHTML = `
+          <div class="app-chip">
+            <span class="app-dot"></span>
+            <span class="app-name">GitHub (${data.github.username})</span>
+            <button class="app-action" onclick="disconnectGitHub()">disconnect</button>
+          </div>`;
+      } else {
+        chip.innerHTML = '';
+      }
+    } catch (err) {
+      // silently ignore — connection status just won't update
+    }
+  }
+
+  // Check connection status on load, and show a toast if we just returned from OAuth
+  checkConnections();
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('connected') === 'github') {
+    history.replaceState({}, '', '/');
+  } else if (urlParams.get('connect_error')) {
+    alert('GitHub connect failed — please try again.');
+    history.replaceState({}, '', '/');
   }
 
   function handleKey(e){
