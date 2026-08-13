@@ -98,7 +98,9 @@
 
   /* ---------- APP SHELL ---------- */
   #app{
-    height:100vh; width:100vw;
+    height:100vh;
+    height:100dvh;
+    width:100vw;
     display:flex;
     background:var(--cream);
     color:var(--espresso);
@@ -182,7 +184,7 @@
   .history-item.active{ background:rgba(201,166,107,0.14); color:var(--gold); }
 
   /* Main panel */
-  #main{ flex:1; display:flex; flex-direction:column; min-width:0; }
+  #main{ flex:1; display:flex; flex-direction:column; min-width:0; min-height:0; }
   #topbar{
     display:flex; align-items:center; gap:14px;
     padding:16px 20px;
