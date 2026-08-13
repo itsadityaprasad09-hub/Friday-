@@ -1,6 +1,6 @@
 // This runs on Vercel's server, NOT in the browser.
 // The API key stays hidden here — never exposed to the user.
-// Using NVIDIA NIM (free tier) with GLM-5.2
+// Using Google Gemini API (free tier)
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -13,28 +13,28 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.NVIDIA_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'zai-org/glm-5.2',
-        messages: [{ role: 'user', content: message }],
-        max_tokens: 1024,
-        temperature: 0.7
-      })
-    });
+    const response = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': process.env.GEMINI_API_KEY
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: message }] }]
+        })
+      }
+    );
 
     const data = await response.json();
 
     if (!response.ok) {
-      console.error('NVIDIA API error:', data);
+      console.error('Gemini API error:', data);
       return res.status(500).json({ error: 'Friday could not respond right now.' });
     }
 
-    const reply = data.choices?.[0]?.message?.content || 'No response received.';
+    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response received.';
     return res.status(200).json({ reply });
 
   } catch (err) {
