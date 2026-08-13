@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Friday could not respond right now.' });
     }
 
-    const reply = data.content?.[0]?.text || 'Kuch samajh nahi aaya.';
+    const reply = data.content?.[0]?.text || 'No response received.';
     return res.status(200).json({ reply });
 
   } catch (err) {

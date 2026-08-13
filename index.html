@@ -316,8 +316,8 @@
 
     <div id="messages">
       <div class="empty-state" id="emptyState">
-        <div class="display">Kya karna hai aaj?</div>
-        <p>Coding, website, ya kisi app ko connect karna — bata do, shuru karte hain.</p>
+        <div class="display">What do you need today?</div>
+        <p>Coding, a website, or connecting an app — just tell me and we&apos;ll get started.</p>
       </div>
     </div>
 
@@ -342,7 +342,7 @@
     if(val === PASSWORD){
       document.getElementById('lock').classList.add('hidden');
     } else {
-      err.textContent = "Galat password";
+      err.textContent = "Wrong password";
       document.getElementById('pwInput').value = "";
     }
   }
@@ -361,7 +361,7 @@
 
   function newChat(){
     document.getElementById('messages').innerHTML =
-      '<div class="empty-state"><div class="display">Kya karna hai aaj?</div><p>Coding, website, ya kisi app ko connect karna — bata do, shuru karte hain.</p></div>';
+      '<div class="empty-state"><div class="display">What do you need today?</div><p>Coding, a website, or connecting an app — just tell me and we&apos;ll get started.</p></div>';
     closeSidebar();
   }
 
@@ -412,14 +412,14 @@
 
       const fridayDiv = document.createElement('div');
       fridayDiv.className = 'msg friday';
-      fridayDiv.innerHTML = '<span class="who">Friday</span>' + (data.reply || data.error || 'Kuch gadbad hui.');
+      fridayDiv.innerHTML = '<span class="who">Friday</span>' + (data.reply || data.error || 'Something went wrong.');
       messages.appendChild(fridayDiv);
       messages.scrollTop = messages.scrollHeight;
     } catch (err) {
       document.getElementById('typingIndicator').remove();
       const fridayDiv = document.createElement('div');
       fridayDiv.className = 'msg friday';
-      fridayDiv.innerHTML = '<span class="who">Friday</span>Connect nahi ho pa raha — check karo API deploy hui hai ya nahi.';
+      fridayDiv.innerHTML = '<span class="who">Friday</span>Could not connect — check whether the API has been deployed.';
       messages.appendChild(fridayDiv);
     }
   }
